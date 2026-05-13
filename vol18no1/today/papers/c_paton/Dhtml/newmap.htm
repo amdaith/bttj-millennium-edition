@@ -1,0 +1,183 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Demonstration Telco SABPR HTML Post Processor">
+<link rel="stylesheet" type="text/css" href="procstyle.css" title="style">
+<title>Process Map</title>
+</head>
+
+<body bgcolor="#FFFFFF"
+onload="parent.OnLoadCode(window.self)"
+onmousedown="parent.OnClickCode(window.self)"
+onmousemove="parent.OnMOverCode(window.self)"
+onmouseout="parent.OnMOutCode(window.self)"
+onmouseup="parent.OnMUpCode(window.self)"
+onbeforeunload="parent.closeWin()">
+
+<!---Workflow diagram template--->
+
+<DIV ID=map style="display:none; position:absolute; top:0; left:10">
+<DIV ID=currteam style="visibility: hidden; position: absolute; left: 400; top: 0; height: 20; width: 300; color:red"></DIV>
+<DIV ID=currwork style="visibility: hidden; position: absolute; left: 90; top: 0; height: 20; width: 300; color:red"></DIV>
+<IMG ID=II1 class=blank src=rightdown.gif style="cursor:normal; left:150; top:112">
+<IMG ID=IO1 class=blank src=leftup.gif style="cursor:normal; left:134; top:120">
+<IMG ID=IO9 class=blank src=rightdown.gif style="cursor:normal; left:540; top:332">
+<IMG ID=II9 class=blank src=leftup.gif style="cursor:normal; left:524; top:340">
+<IMG ID=II10 class=blank src=leftdown.gif style="cursor:normal; left:524; top:112">
+<IMG ID=IO10 class=blank src=rightup.gif style="cursor:normal; left:540; top:120">
+<IMG ID=IO7 class=blank src=leftdown.gif style="cursor:normal; left:134; top:332">
+<IMG ID=II7 class=blank src=rightup.gif style="cursor:normal; left:150; top:340">
+<IMG ID=IO8 class=blank src=up.gif style="left:225; top:100">
+<IMG ID=II8 class=blank src=down.gif style="left:292; top:100">
+<IMG ID=II3 class=blank src=up.gif style="left:225; top:340">
+<IMG ID=IO3 class=blank src=down.gif style="left:292; top:340">
+<IMG ID=IO5 class=blank src=up.gif style="left:405; top:100">
+<IMG ID=II5 class=blank src=down.gif style="left:472; top:100">
+<IMG ID=II11 class=blank src=up.gif style="left:405; top:340">
+<IMG ID=IO11 class=blank src=down.gif style="left:472; top:340">
+<IMG ID=IO12 class=blank src=left1.gif style="left:90; top:165">
+<IMG ID=II12 class=blank src=right1.gif style="left:90; top:195">
+<IMG ID=IO4 class=blank src=left1.gif style="left:90; top:265">
+<IMG ID=II4 class=blank src=right1.gif style="left:90; top:295">
+<IMG ID=II6 class=blank src=left1.gif style="left:540; top:165">
+<IMG ID=IO6 class=blank src=right1.gif style="left:540; top:195">
+<IMG ID=II2 class=blank src=left1.gif style="left:540; top:265">
+<IMG ID=IO2 class=blank src=right1.gif style="left:540; top:295">
+<DIV ID=TT1 class=blank STYLE="left:60; top:60">T1</DIV>
+<DIV ID=TT8 class=blank STYLE="left:225; top:40">T8</DIV>
+<DIV ID=TT5 class=blank STYLE="left:405; top:40">T5</DIV>
+<DIV ID=TT10 class=blank STYLE="left:570; top:60">T10</DIV>
+<DIV ID=TT6 class=blank STYLE="left:630; top:160">T6</DIV>
+<DIV ID=TT2 class=blank STYLE="left:630; top:260">T2</DIV>
+<DIV ID=TT9 class=blank STYLE="left:570; top:360">T9</DIV>
+<DIV ID=TT11 class=blank STYLE="left:405; top:380">T11</DIV>
+<DIV ID=TT3 class=blank STYLE="left:225; top:380">T3</DIV>
+<DIV ID=TT7 class=blank STYLE="left:60; top:360">T7</DIV>
+<DIV ID=TT4 class=blank STYLE="left:0; top:260">T4</DIV>
+<DIV ID=TT12 class=blank STYLE="left:0; top:160">T12</DIV>
+<DIV ID=XO1 class=blank style="left:175; top:110"></DIV>
+<DIV ID=XI1 class=blank style="left:135; top:115"></DIV>
+<DIV ID=XI10 class=blank style="left:565; top:115"></DIV>
+<DIV ID=XO10 class=blank style="left:525; top:110"></DIV>
+<DIV ID=XO7 class=blank style="left:175; top:340"></DIV>
+<DIV ID=XI7 class=blank style="left:135; top:335"></DIV>
+<DIV ID=XI9 class=blank style="left:565; top:335"></DIV>
+<DIV ID=XO9 class=blank style="left:525; top:340"></DIV>
+<DIV ID=TT13 class=blank STYLE="left:630; top:385">T2</DIV>
+<DIV ID=panel class=panel>
+<DIV ID=detailhead class=dhead>
+</DIV>
+<DIV ID=detail class=detail></DIV>
+</DIV>
+</DIV>
+
+<!---end of workflow diagram template--->
+
+
+<!---introduction page--->
+
+<DIV ID=home style="display: ''">
+
+<h2>Welcome to the Demonstration Telco Business Process Model</h2>
+
+<p>This demonstration shows how a typical Telco process can be displayed using DHTML internet technology.</p>
+<p>In many respects, this is still experimental and you may experience some errors in operating the system - please excuse these.</p>
+
+<DIV STYLE="cursor:hand"><IMG ID=XIH0 SRC="show.gif" STYLE="float:left">
+<DIV ID=XNH0 CLASS=exphead>Instructions for use</DIV></DIV>
+<DIV ID=XHH0 class=exptext STYLE="display:none">
+<DIV style="top:270; left:12; margin-bottom:10"><BUTTON title="Process Homepage" style="visibility:visible; float:left" onclick="parent.pHome(window.self)"><img src="home.gif" style="width:20; height:14"></BUTTON>
+Click here to return to this home page.</DIV>
+<DIV style="top:295; left:12; margin-bottom:10"><BUTTON title="Exit" style="visibility:visible; float:left" onclick="parent.pExit(window.self)"><img src="exit.gif" style="width:20; height:14"></BUTTON>
+Click here to go back to the normal Web browser.</DIV>
+
+<DIV style="top:320; left:12; margin-bottom:10"><BUTTON title="Workflows" style="visibility:visible; float:left" onclick="parent.wMenu(window.self)"><img src="motor.gif" style="width:20; height:14"></BUTTON>
+Click here to select a workflow. For example, <b>Provide Customer Services - Perform Installation</b></DIV>
+
+<DIV style="top:345; left:12; margin-bottom:10"><BUTTON title="Organisation" style="visibility:visible; float:left" onclick="parent.oMenu(window.self)"><img src="org.gif" style="width:20; height:14"></BUTTON>
+Click here to select a team. For example, <b>Customer Services - Service Delivery</b></DIV>
+
+<DIV style="top:370; left:12; margin-bottom:10"><BUTTON title="Documents" style="visibility:visible; float:left" onclick="parent.dMenu(window.self)"><img src="book_l.gif" style="width:20; height:14"></BUTTON>
+Click here to find a document. For example, <b>Installation Procedures</b></DIV>
+
+<DIV style="top:395; left:12; margin-bottom:10"><BUTTON title="Measures" style="visibility:visible; float:left" onclick="parent.tMenu(window.self)"><img src="chartl_l.gif" style="width:20; height:14"></BUTTON>
+Click here to find a performance measure. For example, <b>Delivery Target</b></DIV>
+
+
+<DIV style="top:470; left:12; margin-bottom:10"><BUTTON title="Search" onclick="parent.searchTask(window.self)" style="visibility:visible; float:left"><img src="srch.gif" style="width:20; height:14"></BUTTON>Click here to search for a task</DIV>
+
+</DIV>
+
+<!--- end of introduction page--->
+
+<!---menu (pasted into top frame)--->
+
+<DIV ID=menu style="display: none">
+
+
+ 
+<DIV ID=Page_Title style="position: absolute; left: 100; top: 10; height: 22; width: 400; font:14pt, Arial; color: #1C69B7">Demonstration Telco Business Processes</DIV>
+
+<DIV class=submen style="position:absolute; left:100px; top:33px; height:40px; width:700px; text-align:bottom">
+
+<BUTTON title="Process Homepage" style="visibility:visible; position:absolute; top:0; left:0" onclick="parent.pHome(window.self)"><img src="home.gif" style="width:30; height:20"></BUTTON>
+
+<BUTTON title="Exit" style="visibility:visible; position:absolute; top:0; left:50" onclick="parent.pExit(window.self)"><img src="exit.gif" style="width:30; height:20"></BUTTON>
+
+<BUTTON title="Workflows" style="visibility:visible; position:absolute; top:0; left:100" onclick="parent.wMenu(window.self)"><img src="motor.gif" style="width:30; height:20"></BUTTON>
+
+<BUTTON title="Organisation" style="visibility:visible; position:absolute; top:0; left:150" onclick="parent.oMenu(window.self)"><img src="org.gif" style="width:30; height:20"></BUTTON>
+
+<BUTTON title="Documents" style="visibility:visible; position:absolute; top:0; left:200" onclick="parent.dMenu(window.self)"><img src="book_l.gif" style="width:30; height:20"></BUTTON>
+
+<BUTTON title="Measures" style="visibility:visible; position:absolute; top:0; left:250" onclick="parent.tMenu(window.self)"><img src="chartl_l.gif" style="width:30; height:20"></BUTTON>
+
+
+<BUTTON title="Search" onclick="parent.searchTask(window.self)" style="visibility:visible; position: absolute; top:0; left: 300">
+<img src="srch.gif" style="width:30; height:20"></BUTTON>
+
+<BUTTON ID=wstart title="Go to workflow start" onclick="parent.select(window.self)" style="visibility:hidden; position: absolute; top:0; left: 450">
+<img src="start.gif" style="width:30; height:20"></BUTTON>
+
+<BUTTON ID=wback title="History back" onclick="parent.select(window.self)" style="visibility:hidden; position: absolute; top:0; left: 500">
+<img src="left.gif" style="width:30; height:20"></BUTTON>
+
+<BUTTON ID=wfwd title="History forwards" class=control onclick="parent.select(window.self)" style="visibility:hidden; position: absolute; top:0; left: 550">
+<img src="right.gif" style="width:30; height:20"></BUTTON>
+
+</DIV>
+</DIV>
+
+<!---end of menu (pasted into top frame)--->
+
+<!---pull down menus--->
+<DIV ID=MM1 class=menu style="visibility:hidden; top:0; left:200"></DIV>
+<DIV ID=MS1 class=menu style="visibility:hidden; top:0; left:400"></DIV>
+<DIV ID=MM2 class=menu style="visibility:hidden; top:0; left:250"></DIV>
+<DIV ID=MS2 class=menu style="visibility:hidden; top:0; left:450"></DIV>
+<DIV ID=MS3 class=menu style="visibility:hidden; top:0; left:300"></DIV>
+<DIV ID=MS4 class=menu style="visibility:hidden; top:0; left:350"></DIV>
+<DIV ID=MS5 class=menu style="visibility:hidden; top:0; left:400"></DIV>
+
+<!---end of pull down menus--->
+
+<!---data storage area--->
+
+<DIV ID=Data style="display: none">
+</DIV>
+
+<!---end of data storage area--->
+
+<DIV ID=bigpanel class=bigpanel style="visibility:hidden">
+<DIV ID=bighead class=bighead>
+</DIV>
+<BUTTON ID=selbut onclick="parent.selBut(window.self)" style="visibility:hidden; position: absolute; top:3; left: 550; width:50; height: 25; cursor:hand">Select
+</BUTTON> 
+<BUTTON ID=cancdet onclick="parent.cancel(window.self)" style="position: absolute; top:3; left: 610; width:30; height: 25; cursor:hand">X
+</BUTTON> 
+<DIV ID=bigdetail class=bigdetail>
+</DIV>
+</DIV>
+
+</body>
+</html>

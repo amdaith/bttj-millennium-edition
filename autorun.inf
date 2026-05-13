@@ -1,0 +1,3 @@
+[autorun]
+OPEN=ie5\installer.exe
+ICON=ie5\installer.exe,0
