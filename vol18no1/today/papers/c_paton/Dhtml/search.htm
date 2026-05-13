@@ -1,0 +1,55 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Sunrise SABPR HTML Post Processor">
+<link rel="stylesheet" type="text/css" href="procstyle.css" title="style">
+<title>Task Search</title>
+</head>
+<script language="JavaScript">
+<!--
+
+// Version 2.0 Source
+// 10 December 1998
+
+srchWOpen=new Boolean(1);
+
+function closeSrch() {
+if (srchWOpen==true) opener.srchOn=false
+}
+
+function allClick() {
+document.all("WorkFilt").checked=false;
+document.all("TeamFilt").checked=false
+}
+
+function workClick() {
+if (document.all("WorkFilt").disabled==false) {
+ if (document.all("WorkFilt").checked==true) document.all("AllFilt").checked=false;
+ if (document.all("WorkFilt").checked==false && document.all("TeamFilt").checked==false) document.all("AllFilt").checked=true
+ }
+}
+
+function teamClick() {
+if (document.all("TeamFilt").disabled==false) {
+ if (document.all("TeamFilt").checked==true) document.all("AllFilt").checked=false;
+ if (document.all("TeamFilt").checked==false && document.all("WorkFilt").checked==false) document.all("AllFilt").checked=true
+ }
+}
+
+//-->
+</script>
+
+<body ID=Control class=control onbeforeunload="closeSrch()">
+ <DIV>Search all workflows and teams<INPUT ID=AllFilt TITLE="Search all tasks" TYPE=CHECKBOX NAME=all onclick="allClick()"><BR>
+<B>OR</B><BR>
+Search selected team<INPUT ID=TeamFilt TITLE="Search tasks for current team only" TYPE=CHECKBOX NAME=team onclick="teamClick()"><BR>
+<B>AND/OR</B><BR>
+Search selected workflow<INPUT ID=WorkFilt TITLE="Search current worflow only" TYPE=CHECKBOX NAME=workflow onclick="workClick()"> (It takes up to 10 seconds to search a workflow)
+</DIV>  
+<DIV style="position:absolute; top:120">For task name containing: <input ID=srch TITLE="Enter text to search for" type="text"  size="30" style="font-size:9pt; position:absolute; left:150"></DIV>
+<BUTTON ID=gobut TITLE="Start search" onclick="opener.execSrch()" style="visibility:visible; font-size:9pt; cursor:hand; position:absolute; top:117; left:350">Go</BUTTON> 
+<BUTTON ID=clrbut TITLE="Clear current search" onclick="opener.clearSrch()" style="visibility:hidden; font-size:9pt; cursor:hand; position:absolute; top:57; left:380">New search</BUTTON> 
+<DIV style="position:absolute; top:140"><I>(more than 3 characters or 2 characters in capitals)</I></DIV>
+<DIV ID=srchResults style="position:absolute; top:160" onclick="opener.OnClickCode(window.self)"></DIV>
+</body>
+</html>

@@ -1,0 +1,1403 @@
+<html>
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Demonstration SABPR HTML Post Processor">
+<link rel="stylesheet" type="text/css" href="procstyle.css" title="style">
+<title>Demonstration telco business processes</title>
+</head>
+
+<script language="JavaScript">
+<!--
+
+// Version 3.0 Source
+// 17 June 1999
+
+cDisp= new Array(13);		//IDX of teams currently displayed
+nDisp= new Array(13);		//IDX of teams to be displayed
+loadingA= new Boolean(1);	//set while loading A_file reset by A_file
+loadingT= new Boolean(1);	//set while loading T or D_file
+loadingM= new Boolean(1);
+inWork= new Boolean(0);
+histGo= new Boolean(0);
+helpOn= new Boolean(0);
+srchOn= new Boolean(0);
+var ID="0";			//Id of event source
+var ID1="0";			//first character of event source ID
+var ID2="0";			//second ......
+var field1=0;			//first numeric field of iD
+var field2=0;			//second .....
+var wSelID=0;			//selected workflow
+var tSelID=0;			//selected team
+var fSelID=0;			//selected function
+var dSelID=0;			//selected department
+var nSelID=0;			//selected node
+var hSelID=0;			//history entry
+var tOldID=0;			//last team
+var tNewID=0;			//new team
+var wOldID=0;			//last workflow
+var lastDia=0;
+var lnkSrc=0;
+start=new Boolean(1);		//start of workflow flag
+hName=new Array("","Browser Help","About Process");
+inLinks=new Array();		//input links
+outLinks=new Array();		//output links
+ilCount=0;
+olCount=0;
+var iSel="";			//arrow selected
+comstack=new Array();		//return stack for common code calls
+var comCo=0;			//pointer for above
+dState=new Array();
+var fSelID=0;			//no initial function selection
+var hisBegin=0;			//history start pointer
+var hisEnd=0;			//history end pointer
+var hisNow=0;			//current history position
+var disM="";			//displayed menu
+var disSM="";			//displayed submenu
+var menuItem="";		//highlighted menu item
+wFwd= new Boolean(1);
+wLast=0;
+wFirst=0;
+fHist= new Array(20);
+fWork= new Array(20);
+fTeam= new Array(20);
+fLink= new Array(20);
+refs= new Array();
+refState=0;
+det= new Array(20);
+par= new Array(20);
+diags= new Array(20);
+var detCount=0;
+var detPoint=0;
+var parCount=0;
+var parPoint=0;
+var diagCount=0;
+var diagPoint=0;
+scrolled= new Boolean(1);
+refresh= new Boolean(1);
+disP= new Boolean(0);
+disF= new Boolean(0);
+index= new Boolean(1);
+datePlus= new Date();
+dateMinus= new Date();
+var embedWin = "fullscreen=no,menubar=yes,scrollbars=yes,resizeable=yes,toolbar=yes";
+var helpWin = "fullscreen=no,menubar=no,scrollbars=yes,resizeable=no,toolbar=no,width=700,height=500";
+datePlus.setTime(datePlus.getTime()+(30*24*3600*1000));
+dateMinus.setTime(dateMinus.getTime()-(30*24*3600*1000))
+
+function debug(n1,v1,n2,v2,n3,v3,n4,v4) {
+var dText;
+dText=n1+": "+v1;
+if (n2!="") dText=dText+"\n\r"+n2+": "+v2;
+if (n3!="") dText=dText+"\n\r"+n3+": "+v3;
+if (n4!="") dText=dText+"\n\r"+n4+": "+v4;
+alert(dText)
+}
+
+function mailBack(win) {
+var mailWin,mObj,serv,fdate,ftime;
+serv=window.pmap.document.location.protocol;
+if (serv=="file:" && win.event.altKey==false) alert("Working offline - mail not available")
+else {
+ mailDate= new Date();
+ fdate=mailDate.getDate()+"/"+mailDate.getMonth()+"/"+mailDate.getYear();
+ ftime=mailDate.getHours()+":"+mailDate.getMinutes()+":"+mailDate.getSeconds();
+ mailWin=window.open("mailback.htm","",helpWin)
+ mObj=mailWin.document.all;
+ mObj("fbDate").value=fdate;
+ mObj("fbTime").value=ftime;
+if (wSelID!=0) mObj("fbWork").value=wName[wSelID]
+ else mObj("fbWork").value="<none selected>";
+ if (nSelID!=0) {
+  mObj("fbDia").value=dName[nDia[nSelID]];
+  mObj("fbNode").value=nName[nSelID]
+  }
+ else {
+  mObj("fbDia").value="<none selected>";
+  mObj("fbNode").value="<none selected>"
+  };
+ }
+}
+
+function getHelp(elID) {
+var sObj,elType,hText;
+hText="";
+sObj=window.pmap.document.all(elID);
+elType=elID.substring(0,2);
+if (elType=="MI") {
+ if (disM=="MM1") hText="Top level business functions - move cursor right to select workflow:\n\r\n-blue: no team selected\n\r\-red: selected team takes part in workflow\n\r\-grey:  selected team does not take part in workflow";
+ if (disM=="MM2") hText="Telco and external departments - move cursor right to select team:\n\r\n-blue: no workflow selected\n\r\-red: team takes part in selected workflow\n\r\-grey:  team does not take part in selected workflow";
+ };
+if (elType=="MQ") {
+ if (disSM=="MS1") hText="click to view workflow:\n\r\n-blue: go to workflow start\n\r-red: go to workflow from view of current selected team\n\r-grey: go to workflow start and cancel team selection";
+ if (disSM=="MS2") hText="click to view team:\n\r\n-blue: no workflow selected\n\r\-red: team takes part in selected workflow\n\r\-grey:  team does not take part in selected workflow";
+ if (disSM=="MS3") hText="click to view document:\n\r\n-blue: no workflow selected\n\r\-red: document used in selected workflow\n\r\-grey:  team is not used in selected workflow";
+ if (disSM=="MS4") hText="click to view measure:\n\r\n-blue: no workflow selected\n\r\-red: measure applies to selected workflow\n\r\-grey:  team does not apply to selected workflow";
+ if (disSM=="MS5") {
+  if (elID.charAt(2)=="1") hText="click to switch help mode"
+  else hText="click for information about the current process (if any)"
+  }
+ };
+if (elID=="selbut") hText="click to select team";
+if (elID=="cancdet") hText="click to exit view";
+if (elType=="TT") hText="click to select this team";
+if (elType=="II") hText="click to view inputs to the selected team";
+if (elType=="IO") hText="click to view outputs from the selected team";
+if (elType=="LO") hText="click to follow workflow";
+if (elType=="LI") hText="click to go back in workflow";
+sObj.setAttribute("title",hText)
+}
+
+function wMenu(win) {
+var i,x;
+clearMenu();
+IDs=new Array();
+x=fName.length;
+for (i=1; i<x; i++) {
+ IDs[i]=i
+ };
+disMenu("MM1",IDs,0)
+}
+
+function oMenu(win) {
+var i,x;
+clearMenu();
+IDs=new Array();
+x=deName.length;
+for (i=1; i<x; i++) {
+ IDs[i]=i
+ };
+disMenu("MM2",IDs,0)
+}
+
+function dMenu(win) {
+var i,x;
+clearMenu();
+IDs=new Array();
+x=oName.length;
+for (i=1; i<x; i++) {
+ IDs[i]=i
+ };
+disMenu("MS3",IDs,0)
+}
+
+function tMenu(win) {
+var i,x;
+clearMenu();
+IDs=new Array();
+x=taName.length;
+for (i=1; i<x; i++) {
+ IDs[i]=i
+ };
+disMenu("MS4",IDs,0)
+}
+
+function hMenu(win) {
+var i,x;
+clearMenu();
+IDs=new Array();
+x=hName.length;
+for (i=1; i<x; i++) {
+ IDs[i]=i
+ };
+disMenu("MS5",IDs,0)
+}
+
+function OnMUpCode(win) {
+var i,x,y;
+getPars(win);
+if (ID1=="T") {
+ clearArrows();
+ workDiaRef();
+ y=0;
+ if (tOldID==0) tOldID=slT[nSL[wStart[wSelID]]];
+ disInLinks(tOldID) 
+ }
+}
+
+function clickT(win) {		//text box clicked
+var iObj;
+refreshHist(hSelID,false);
+iObj=window.pmap.document.all;
+iObj("detail").innerHTML="";
+iObj("TT"+field1).className="boxsel";
+iObj("detailhead").innerText="";
+tOldID=tSelID;
+tSelID=cDisp[field1];
+nSelID=0
+}
+
+function clickI(win) {
+var x;
+getPars(win);
+refreshHist(hSelID,false);
+if (iSel!="") window.pmap.document.all(iSel).className="ICOM";
+iSel="I"+ID2+field1;
+window.pmap.document.all(iSel).className="ICOMsel";
+window.pmap.document.all("detail").innerHTML="";
+x=cDisp[field1];
+if (ID2=="I") disInLinks(x)
+else disOutLinks(x)
+}
+
+function disInLinks(srcID) {
+var i,w,x,y,z,lText;
+lnkSrc=srcID;
+y=ilCount;
+lText="";
+for (i=1; i<y; i++) {		//get input nodes
+ w=inLinks[i];
+ x=tlFrom[w];
+ if (x==srcID) {		
+  lText="<DIV ID=LI"+lTo[tLinks[w]]+" class=link>";
+  lText=lText+lName[tLinks[w]]+"</DIV>\n\r";
+  window.pmap.document.all("detail").insertAdjacentHTML("BeforeEnd",lText)
+  }
+ }
+if (lText!="") {
+ y=0;
+ while (y++<12) {
+  if (cDisp[y]==srcID) break
+  };
+ if (y<13) {
+  window.pmap.document.all("II"+y).className="ICOMsel";
+  iSel="II"+y
+  }
+ }
+else {
+ lText="<DIV style=\"font-size:14; font-weight:bold; font-style:italic\">Click on a blue arrow to enter the workflow<\DIV>";
+ window.pmap.document.all("detail").innerHTML=lText
+ }
+}
+
+function disOutLinks(dstID) {
+var i,w,x,y,z,lText;
+y=olCount;
+for (i=1; i<y; i++) {		//get input nodes
+ w=outLinks[i];
+ x=tlTo[w];
+ if (x==dstID) {		
+  lText="<DIV ID=LO"+lTo[tLinks[w]]+" class=farlink>";
+  lText=lText+lName[tLinks[w]]+"  .... to "+tName[tlTo[w]]+"</DIV>\n\r";
+  window.pmap.document.all("detail").insertAdjacentHTML("BeforeEnd",lText)
+  }
+ }
+}
+
+function workDia() {		//workflow diagram selected
+var iObj,w,x,i,y,z,lnk;
+iObj=window.pmap.document.all;
+iObj("detail").innerHTML="";
+x=wSelID;
+if (x>0) {
+ iObj("map").style.display="";		//show workflow diagram
+ iObj("home").style.display="none";
+ x=tSelID;
+ if (x==0) {					//use workflow start
+  x=slT[nSL[wStart[wSelID]]];
+  tSelID=x			//sl definition wanted
+  };
+ start=true;
+ workDiaRef()
+ }
+else alert("Please select a workflow")
+}
+
+function workDiaRef() {
+var iObj,w,x,i,y,z,lnk,lText;
+wOldID=wSelID;
+for (i=1; i<13; i++) {
+ nDisp[i]=0
+ };
+clearArrows();
+iObj=window.pmap.document.all;
+x=inLinks.length;
+for (i=0; i<x; i++) {
+ inLinks[i]=0			//clear input links
+ };
+ilCount=1;
+x=outLinks.length;
+for (i=0; i<x; i++) {
+ outLinks[i]=0			//clear output links
+ };
+olCount=1;
+lnk=wLinks[wSelID];
+if (lnk!=0) {
+ links=lnk.split(",");
+ x=tName.length
+ written=new Array();
+ for (i=0; i<x; i++) {
+  written[i]=0
+  };
+ iIn=new Array();		//flag for io
+ iOut=new Array();
+ teams=new Array();		//create array of connected teams
+ teams[0]=0;
+ iIn[0]=0;
+ iOut[0]=0;
+ x=links.length;
+ w=1;
+ for (i=1; i<x; i++) {
+  if (tlTo[links[i]]==tSelID) {
+   inLinks[ilCount++]=links[i];
+   z=tlFrom[links[i]];
+   if (written[z]!=1) {
+    written[z]=1;
+    };
+   iIn[z]=1
+   };
+  if (tlFrom[links[i]]==tSelID) {
+   outLinks[olCount++]=links[i];
+   z=tlTo[links[i]];
+   if (written[z]!=1) {
+    written[z]=1;
+    };
+   iOut[z]=1
+   }
+  };
+ clearArrows();
+ y=1;
+ x=13;
+ for(i=1; i<x; i++) {
+  nDisp[i]=0
+  };
+ x=tName.length;
+ for(i=1; i<x; i++) {
+  if (written[i]==1 && y<13) {
+   if (iIn[i]==1) dispArrow(y,"I");
+   if (iOut[i]==1) dispArrow(y,"O");
+   nDisp[y++]=i
+   }
+  };
+ };
+disSel();
+refreshDisp();
+if (start==true) {
+ comCo=0;
+ if (tSelID==0 || tSelID==slT[nSL[wStart[wSelID]]] || inWork==false) goFwd(wStart[wSelID],false)
+ else {
+  window.nav.document.all("wstart").style.visibility="visible";
+  if (tOldID==0) tOldID=slT[nSL[wStart[wSelID]]];
+  disInLinks(tOldID) 
+  }
+ }
+}
+
+function workDet() {
+var i,w,x,y,l,link,links,sObj;
+found=new Boolean(0);
+l=getT(nDia[nSelID]);
+if (l=="I") {
+ sObj=window.pmap.document.all;
+ restoreDia();
+ x=nSelID;
+ y=slT[nSL[x]];
+ if (y!=tSelID) {
+  tSelID=y;
+  start=false;
+  workDiaRef()
+  };
+ if (nLogic[x]=="U") {			//UOB
+  link="";
+  if (nDesc[x]==1) link=sObj("ND"+x).innerText;
+  y=nProc[x];
+  getHead(y,"H","N",x,link);
+  if (y==1) sObj("XH"+x).innerHTML=sObj("NP"+x).innerHTML
+  };
+ if ("XOA".indexOf(nLogic[x])!=-1) {	//junction
+  link="";
+  w=nIL[x].split(",")
+  if (nLogic[x]=="A" && w.length>2) {	//fan-in and
+   link="All these done?:"+getInLinks(nIL[x]);
+   sObj("detail").insertAdjacentHTML("BeforeEnd",link)
+   }
+  else {
+   if (nDesc[x]==1) link=sObj("ND"+x).innerText;
+   if (nLogic[x]=="X" && w.length<=2) getHead(0,"H","N",x,link);
+   link="To:";
+   y=nLogic[x];
+   if (y=="X") link="Choose one of:";
+   if (y=="O") link="Do these as necessary:";
+   if (y=="A") link="Do all of:";
+   link=getOutLinks(nOL[x],link);
+   sObj("detail").insertAdjacentHTML("BeforeEnd",link)
+   }
+  }
+ };
+return l
+}
+
+function addSel(selList,selText,selVal) {	//add item to selection menu
+if (selText!="") {
+ var selObj=document.createElement("OPTION");
+ selObj.text=selText;
+ selObj.value=selVal;
+ selObj.className="select";
+ window.pmap.document.all(selList).add(selObj)
+ }
+}
+
+function disMenu(mID,IDs,top) {
+var iObj,u,z,i,x,y,tText,v,w,sObj,desc,selObj,filt,hcol;
+tText="";
+filt="";
+hcol="#1C69B7";
+iObj=window.pmap.document.all(mID);
+iObj.style.visibility="visible";
+iObj.style.top=top;
+iObj.innerHTML="";
+if (mID.charAt(1)=="M") {
+ disM=mID;
+ v="I"
+ }
+else {
+ disSM=mID;
+ v="Q"
+ };
+if (mID=="MM1") {
+ sObj=fName;
+ y=""
+ };
+if (mID=="MM2") {
+ sObj=deName;
+ y=""
+ };
+if (mID=="MS1") {
+ sObj=wName;
+ if (tSelID!=0) filt=tW[tSelID].split(",");
+ y="WD"
+ };
+if (mID=="MS2") {
+ sObj=tName;
+ if (wSelID!=0) filt=wT[wSelID].split(",");
+ y="SD"
+ };
+if (mID=="MS3") {
+ sObj=oName;
+ if (wSelID!=0) filt=wDocs[wSelID].split(",");
+ y="OD"
+ };
+if (mID=="MS4") {
+ sObj=taName;
+ if (wSelID!=0) filt=wTargets[wSelID].split(",");
+ y="TD"
+ };
+if (mID=="MS5") {
+ sObj=hName;
+ y="";
+ filt=new Array(1,2);
+ if (wSelID==0) filt[1]=0
+ };
+x=IDs.length;
+for (i=1; i<x; i++) {
+ w=IDs[i];
+ tText="<DIV ID=M"+v+w;
+ if (filt!="") {
+  hcol="gray";
+  u=filt.length;
+  z=0;
+  while (z<u) {
+   if (filt[z++]==w) {
+    if (mID!="MS5") hcol="red"
+    else hcol="#1C69B7"
+    }
+   }
+  };
+ if (y!="") {
+  desc=window.pmap.document.all(y+w).innerText;
+  tText=tText+" style=\"color:"+hcol+"\" title=\""+desc+"\"";
+  }
+ else tText=tText+" style=\"color:"+hcol+"\"";
+ tText=tText+">"+sObj[w]+"</DIV>";
+ iObj.insertAdjacentHTML("BeforeEnd",tText);
+ if (helpOn==true) getHelp("M"+v+w)
+ };
+}
+
+function disDet(fObj,selID) {
+var dObj,hObj,sObj,dText,tText,x;
+sObj=window.pmap.document.all;
+x=selID;
+if (x>0) {
+ dObj=window.pmap.document.all("bigdetail");
+ hObj=window.pmap.document.all("bighead");
+ if (fObj=="func") {
+  tText="<DIV class=head>Function: "+fName[x]+"</DIV>";
+  dText=sObj("FD"+x).innerText
+  };
+ if (fObj=="dept") {
+  tText="<DIV class=head>Function: "+deName[x]+"</DIV>";
+  dText="<DIV>"+sObj("AD"+x).innerText+"</DIV>";
+  dText=dText+"<DIV class=subhead>Manager:</DIV>"+sObj("AM"+x).innerText
+  };
+ if (fObj=="workflow") {
+  tText="<DIV class=head>Workflow: "+wName[x]+"</DIV>";
+  dText="<DIV>"+sObj("WD"+x).innerText+"</DIV>"
+  };
+ if (fObj=="team") {
+  tText="<DIV class=head>Team: "+tName[x]+"</DIV>";
+  dText="<DIV>"+sObj("SD"+x).innerText+"</DIV>";
+  dText=dText+"<DIV class=subhead>Manager:</DIV><DIV>"+sObj("SM"+x).innerText+"</DIV>";
+  dText=dText+"<DIV  class=subhead>Responsibilities:</DIV><DIV>"+sObj("SR"+x).innerText+"</DIV>";
+  dText=dText+"<DIV class=subhead>Process representative:</DIV><DIV>"+sObj("SP"+x).innerText+"</DIV>"
+  };
+ if (fObj=="target") {
+  tText="<DIV class=head>Target: "+taName[x]+"</DIV>";
+  dText="<DIV>"+sObj("TD"+x).innerHTML+"</DIV>";
+  };
+ if (fObj=="object") {
+  tText="<DIV class=head>Document: "+oName[x]+"</DIV>";
+  dText="<DIV>"+sObj("OD"+x).innerHTML+"</DIV>";
+  };
+ if (fObj=="help") {
+  tText="<DIV class=head>Process Diagram: "+dName[x]+"</DIV>";
+  dText="<DIV>"+sObj("DD"+x).innerText+"</DIV>";
+  dText=dText+"<DIV class=subhead>Status:</DIV><DIV>"+sObj("DS"+x).innerText+"</DIV>";
+  dText=dText+"<DIV class=subhead>Owner:</DIV><DIV>"+sObj("DO"+x).innerText+"</DIV>";
+  dText=dText+"<DIV class=subhead>Business representative:</DIV><DIV>"+sObj("DB"+x).innerText+"</DIV>";
+  dText=dText+"<DIV class=subhead>Analyst:</DIV><DIV>"+sObj("DA"+x).innerText+"</DIV>"
+  };
+ hObj.innerHTML=tText;
+ dObj.innerHTML=dText;
+ sObj("bigpanel").style.visibility="visible";
+ hObj.style.display="";
+ dObj.style.display=""
+ }
+}
+
+function cancel(win) {
+var sObj;
+sObj=window.pmap.document.all;
+sObj("bigpanel").style.visibility="hidden";
+sObj("selbut").style.visibility="hidden";
+sObj("bigdetail").innerHTML=""
+}
+
+function getHead(type,I1,I2,IDX,nDesc) {		//create header
+var elName,exText,exClass,hCol,exImg,exTitle;
+if (nDesc!="") exTitle=" TITLE=\""+nDesc+"\""
+else exTitle="";
+if (I2=="N") elName=nName[IDX];
+if (I2=="D") elName=dName[IDX];
+//if (IDX==fSelID) hCol="red"
+//else hCol="\"\"";
+hCol="\"\"";
+exText="<DIV"+exTitle+" STYLE=\"cursor:hand\">";
+if (type & 2) exImg="hide.gif"
+else exImg="show.gif";
+if (type & 1) {
+ exText=exText+"<IMG ID=XI"+IDX+" SRC="+exImg+" STYLE=\"float:left\">";
+ exClass="exphead"
+ }
+else {
+ exClass="nonexphead";
+ exText=exText+"<IMG SRC=\"\" STYLE=\"width:15; height:15; visibility:hidden; float:left\">"
+ };
+if (elName!="") {
+ exText=exText+"<DIV ID="+I1+I2+IDX+" CLASS="+exClass+exTitle+" STYLE=\"color: "+hCol+"\">";
+ exText=exText+"</DIV>";
+ exText=exText+"</DIV>";
+ exText=exText+"<DIV ID=X"+I1+IDX+" CLASS=exptext STYLE=\"display:none\" ></DIV>\n\r"
+ };
+window.pmap.document.all("detail").insertAdjacentHTML("BeforeEnd",exText);
+if(elName.length>0) window.pmap.document.all(I1+I2+IDX).innerText=elName
+}
+
+function dispArrow(disNo,disDir) {
+window.pmap.document.all("I"+disDir+disNo).className="ICOM"
+}
+
+function selArrow(disNo,disDir) {
+window.pmap.document.all("I"+disDir+disNo).className="ICOMsel"
+}
+
+function clearArrows() {
+var i;
+iSel="";
+for (i=1; i<13; i++) {
+ window.pmap.document.all("II"+i).className="blank";
+ window.pmap.document.all("IO"+i).className="blank"
+ }
+}
+
+function restoreDia() {
+var i,iObj;
+iSel="";
+for (i=1; i<13; i++) {
+ iObj=window.pmap.document.all("TT"+i);
+ if (iObj.className=="boxex") iObj.className="box";
+ iObj=window.pmap.document.all("II"+i);
+ if (iObj.className=="ICOMsel") iObj.className="ICOM";
+ iObj=window.pmap.document.all("IO"+i);
+ if (iObj.className=="ICOMsel") iObj.className="ICOM"
+ }
+}
+
+function refreshDisp() {	//display contents of nDisp
+var x,y,i;
+for (i=1; i<=12; i++) {		//put new ones in
+ cDisp[i]=nDisp[i];
+ window.pmap.document.all("TT"+i).innerText=tName[cDisp[i]]
+ if (cDisp[i]==0) window.pmap.document.all("TT"+i).className="blank"
+ else window.pmap.document.all("TT"+i).className="box"
+ };
+window.pmap.document.all("detail").innerHTML="";
+window.pmap.document.all("detailhead").innerText=tName[tSelID]
+}
+
+function testReady() {			//check if not loading
+var result;
+result= ((loadingA || loadingT || loadingM)==false);
+return result
+}
+
+
+function OnLoadCode(win) {		//something loaded
+var what,lText;
+what=win.document.title;
+if (what=="Data arrays") {
+ loadingA=false;
+ if (!loadingM) window.nav.location.href="D_info.htm"
+ };
+if (what=="Process Map") {
+ loadingM=false;
+ if (!loadingA) window.nav.location.href="D_info.htm"
+ };
+if (what=="Diagram Information") {
+ dDoc=window.pmap.document.all("Data");
+ loadingT=false;
+ lText=win.document.all("Data").innerHTML;
+ dDoc.insertAdjacentHTML("AfterBegin",lText);
+ autoStart()
+ };
+if (what.charAt(0)=="T") {		//T file
+ what=what.substring(1,what.length);
+ lText=win.document.all("D"+what).outerHTML;
+ dDoc=window.pmap.document.all("Data");
+ dDoc.insertAdjacentHTML("AfterBegin",lText);
+ dState[what]="I";
+ window.nav.document.all("data").innerHTML=window.pmap.document.all("menu").innerHTML;
+ window.nav.document.all("data").style.display="";
+ refreshHCont();
+ loadingT=false;
+ goFwd(nSelID,true)
+ }
+}
+
+function getPars(win) {			//get primary event parameters
+var x;
+ID=win.event.srcElement.id;
+ID1=ID.charAt(0);
+ID2=ID.charAt(1);
+x=ID.indexOf("#",1);			//find field delimiter
+if (x==-1) {
+ field1=ID.substring(2,ID.length);
+ field2=0
+ }
+else {
+ field1=ID.substring(1,x);		//...diagram ref, and...
+ field2=ID.substring(x+1,ID.length);	//...symbol id
+ };
+}
+
+function OnClickCode(win) {		//something clicked
+if (testReady()==true) {
+ getPars(win);
+ if (ID1=="T") clickT(win);
+ if (ID1=="I") clickI(win);
+ if (ID1=="X") clickX(win);
+ if (ID1=="E") clickE(win);
+ if (ID1=="L") clickL(win);
+ if (ID1=="H") clickL(win);
+ if (ID1=="M") clickM(win)
+ }
+}
+
+function searchTask() {
+if (srchOn==true) window.srchWin.focus()
+else {
+ srchOn=true;
+ srchWin=window.open("search.htm","",helpWin);
+ clearSrch()
+ }
+}
+
+function clearSrch() {
+var wFilt,tFilt,aFilt,iObj;
+iObj=window.srchWin.document.all;
+wFilt=iObj("WorkFilt");
+tFilt=iObj("TeamFilt");
+aFilt=iObj("AllFilt");
+aFilt.checked=false;
+if (wSelID==0) {
+ wFilt.disabled=true;
+ wFilt.checked=false
+ }
+else wFilt.disabled=false;
+if (tSelID==0) {
+ tFilt.disabled=true;
+ tFilt.checked=false
+ }
+else {
+ tFilt.disabled=false;
+ tFilt.checked=true
+ };
+if (wSelID==0 && tSelID==0) aFilt.checked=true;
+iObj("gobut").style.visibility="visible";
+iObj("clrbut").style.visibility="hidden";
+iObj("srchResults").innerHTML=""
+}
+
+function execSrch() {
+var iObj,srchStr,u,x,y,z,tarStr,lText,wFilt,tFilt,aFilt,filt;
+srchWork=new Boolean(0);
+srchAll=new Boolean(0);
+srchTeam=new Boolean(0);
+foundWork=new Boolean(0);
+iObj=window.srchWin.document.all;
+wFilt=iObj("WorkFilt");
+tFilt=iObj("TeamFilt");
+aFilt=iObj("AllFilt");
+if (aFilt.checked==true) srchAll=true;
+if (wFilt.checked==true) srchWork=true;
+if (tFilt.checked==true) srchTeam=true;
+srchStr=iObj("srch").value;
+u=srchStr.length;
+if (u!=0) {
+ if ((u<3 && srchStr.charAt(u-1)>"Z") || u==1) alert("Please enter search text")
+ else {
+  iObj("gobut").style.visibility="hidden";
+  iObj("clrbut").style.visibility="visible";
+  x=nName.length;
+  srchStr=srchStr.toUpperCase();
+  if (srchAll==true) {
+   for (var i=1; i<x; i++) {
+    if (nLogic[i]=="U") {
+     if (u>2) tarStr=(nName[i]).toUpperCase()
+     else tarStr=(nName[i]);
+     if (tarStr.indexOf(srchStr)!=-1) {
+      lText="<DIV ID=LS"+i+" class=link>";
+      lText=lText+nName[i]+"</DIV>\n\r";
+      iObj("srchResults").insertAdjacentHTML("BeforeEnd",lText)
+      }
+     }
+    }
+   };
+  if (srchAll==false && srchTeam==true && srchWork==false) {
+   for (var i=1; i<x; i++) {
+    if (nLogic[i]=="U") {
+     if(tSelID==slT[nSL[i]]) {
+      if (u>2) tarStr=(nName[i]).toUpperCase()
+      else tarStr=(nName[i]);
+      if (tarStr.indexOf(srchStr)!=-1) {
+       lText="<DIV ID=LS"+i+" class=link>";
+       lText=lText+nName[i]+"</DIV>\n\r";
+       iObj("srchResults").insertAdjacentHTML("BeforeEnd",lText)
+       }
+      }
+     }
+    }
+   };
+  if (srchAll==false && srchTeam==false && srchWork==true) {
+   for (var i=1; i<x; i++) {
+    if (nLogic[i]=="U") {
+     filt=slW[nSL[i]].split(",");
+     if (wFilt.checked==true) {
+      z=0;
+      foundWork=false;
+      while (foundWork==false && z++<filt.length) {
+       if (filt[z]==wSelID) foundWork=true
+       }
+      };
+     if(foundWork==true) {
+      if (u>2) tarStr=(nName[i]).toUpperCase()
+      else tarStr=(nName[i]);
+      if (tarStr.indexOf(srchStr)!=-1) {
+      lText="<DIV ID=LS"+i+" class=link>";
+       lText=lText+nName[i]+"</DIV>\n\r";
+       iObj("srchResults").insertAdjacentHTML("BeforeEnd",lText)
+       }
+      }
+     }
+    }
+   };
+  if (srchAll==false && srchTeam==true && srchWork==true) {
+   for (var i=1; i<x; i++) {
+    if (nLogic[i]=="U") {
+     filt=slW[nSL[i]].split(",");
+     if (wFilt.checked==true) {
+      z=0;
+      foundWork=false;
+      while (foundWork==false && z++<filt.length) {
+       if (filt[z]==wSelID) foundWork=true
+       }
+      };
+     if(srchAll==true || ((srchTeam==false || tSelID==slT[nSL[i]]) && (srchWork==false || foundWork==true))) {
+      if (u>2) tarStr=(nName[i]).toUpperCase()
+      else tarStr=(nName[i]);
+      if (tarStr.indexOf(srchStr)!=-1) {
+       lText="<DIV ID=LS"+i+" class=link>";
+       lText=lText+nName[i]+"</DIV>\n\r";
+       iObj("srchResults").insertAdjacentHTML("BeforeEnd",lText)
+       }
+      }
+     }
+    }
+   };
+  if (iObj("srchResults").innerHTML=="") iObj("srchResults").innerText="No match found"
+  }
+ }
+}
+
+function clickM(win) {
+var x,y,z,iObj;
+histGo=false;
+if (ID2=="Q") {
+ iObj=window.pmap.document.all;
+ if (disSM=="MS1") {
+  if (hSelID!=0) refreshHist(hSelID,false);
+  wSelID=field1;
+  if (win.event.srcElement.style.color=="red") inWork=true
+  else inWork=false;
+  iObj("map").style.display="";		//show workflow diagram
+  iObj("home").style.display="none";
+  start=true;
+  clearMenu();
+  if (wSelID!=wOldID) workDiaRef()
+  };
+ if (disSM=="MS2") {
+  tNewID=field1;
+  if (win.event.srcElement.style.color=="red") inWork=true
+  else inWork=false;
+  clearMenu();
+  disDet("team",field1);
+  iObj("selbut").style.visibility="visible"
+  };
+ if (disSM=="MS3") {
+  clearMenu();
+  disDet("object",field1)
+  };
+ if (disSM=="MS4") {
+  clearMenu();
+  disDet("target",field1)
+  };
+ if (disSM=="MS5") {
+  clearMenu();
+  if (field1==1) selHelp()
+  else {
+   x=nSelID;
+   if (x==0) x=wStart[wSelID]
+   disDet("help",nDia[x])
+   }
+  }
+ }
+}
+
+function selBut(win) {
+window.pmap.document.all("selbut").style.visibility="hidden";
+window.pmap.document.all("bigpanel").style.visibility="hidden";
+if (hSelID!=0) refreshHist(hSelID,false);
+goTeam()
+}
+
+function disSel() {
+var sObj;
+sObj=window.pmap.document.all;
+if (wSelID!=0) sObj("currwork").innerHTML="Workflow selected: <B>"+wName[wSelID]+"</B>"
+else sObj("currwork").innerText="Workflow selected: none";
+sObj("currwork").style.visibility="visible";
+if (tSelID!=0) sObj("currteam").innerHTML="Team selected: <B>"+tName[tSelID]+"</B>"
+else sObj("currteam").innerText="Team selected: none";
+sObj("currteam").style.visibility="visible"
+}
+
+function goTeam() {
+var x,y,z,iObj;
+iObj=window.pmap.document.all;
+if (wSelID!=0) {
+ iObj("map").style.display="";		//show workflow diagram
+ iObj("home").style.display="none";
+ if (inWork!=true) {
+  if (confirm("The team you have selected is not in the current workflow - if you continue you will have to select a new workflow.")) {
+   wSelID=0;
+   window.pmap.document.all("detail").innerHTML="";
+   window.pmap.document.all("detailhead").innerText=tName[tSelID];
+   tOldID=tSelID;
+   tSelID=tNewID;
+   for (x=0; x<13; x++) {
+    nDisp[x]=0
+    };
+   refreshDisp();
+   clearArrows()
+   }
+  }
+ else {
+  tOldID=tSelID;
+  tSelID=tNewID;
+  iObj("detail").innerHTML="";
+  iObj("detailhead").innerText="";
+  nSelID=0;
+  start=false;
+  workDiaRef();
+  y=0;
+  if (tOldID==0) tOldID=slT[nSL[wStart[wSelID]]]
+  disInLinks(tOldID)
+  }; 
+ disSel()
+ }
+else tSelID=tNewID
+}
+
+
+function OnMOverCode(win) {		//mouse over something
+var i,x,y,sM,sObj,dis,mText,dObj;
+ sObj=null;
+ dObj=win.event.srcElement;
+ if (helpOn==true && dObj.id!="" && dObj!=null) {
+  dObj.style.cursor="help";
+  getHelp(dObj.id)
+ };
+ mText="";
+ getPars(win);
+ x=disM.charAt(2);
+ sM="MS"+x;
+ if (ID1=="M") {
+  if (ID2=="I") {
+   if (x=="1") sObj=fW;
+   if (x=="2") sObj=deT;
+   if (sObj!=null) {
+    x=field1;
+    y="0,"+sObj[x];
+    dis=y.split(",");
+    disMenu(sM,dis,win.event.srcElement.getAttribute("offsetTop"));
+    win.event.srcElement.style.backgroundColor="#FFCC00";
+    if (menuItem!="" && menuItem!=null && menuItem!=win.event.srcElement.id) {
+     window.pmap.document.all(menuItem).style.backgroundColor=""
+     };
+    menuItem=win.event.srcElement.id
+    }
+   };
+  if (ID2=="Q") win.event.srcElement.style.backgroundColor="#FFCC00"
+  };
+ win.event.returnValue=true
+}
+
+function OnMOutCode(win) {
+var t,f,t1,f1,t2,f2;
+ getPars(win);
+ t=win.event.toElement;
+ f=win.event.fromElement;
+ f.style.cursor="";
+ if (t!=null) {
+  t=t.id.substring(0,2);
+  t1=t.charAt(0);
+  t2=t.charAt(1)
+  };
+ if (f!=null) {
+  f=f.id.substring(0,2);
+  f1=f.charAt(0);
+  f2=f.charAt(1)
+  };
+ if (f=="MQ") win.event.fromElement.style.backgroundColor="";
+ if ((t==null || t=="MI")&& menuItem!="" && menuItem!=null && f1=="M")  window.pmap.document.all(menuItem).style.backgroundColor="";
+ if ((t==null || t1!="M") && f1=="M") clearMenu()
+}
+
+function clearMenu() {
+if (disM!="") {
+ window.pmap.document.all(disM).style.visibility="hidden";
+ window.pmap.document.all(disM).innerHTML=""
+ };
+if (disSM!="") {
+ window.pmap.document.all(disSM).style.visibility="hidden";
+ window.pmap.document.all(disSM).innerHTML=""
+ };
+menuItem="";
+disM="";
+disSM=""
+}
+
+function OnKeyCode(win) {		//key pressed
+var k;
+k=win.event.keyCode;
+if (testReady()==true) {
+ if (k==68) selMode("P");
+ if (k==78) selMode("F")
+ }
+}
+
+function delCookie() {
+window.document.cookie="Sunprocs=deleted; expires="+dateMinus
+}
+
+function autoStart() {
+delCookie();
+window.nav.document.all("data").innerHTML=window.pmap.document.all("menu").innerHTML;
+clearDisplay();
+window.pmap.document.all("home").style.display="";
+window.nav.document.all("data").style.display="";
+}
+
+function clearDisplay() {
+var i;
+clearArrows();
+for (i=1; i<=12; i++) {
+ cDisp[i]=0;
+ nDisp[i]=0;
+ window.pmap.document.all("TT"+i).className="blank"
+ };
+window.pmap.document.all("detail").innerHTML="";
+window.pmap.document.all("detailhead").innerText="";
+window.pmap.document.all("map").style.display="none";
+window.pmap.document.all("bigpanel").style.visibility="hidden"
+}
+
+
+function pHome(win) {
+var mObj=window.nav.document.all;
+if (testReady()==true) {
+ if (hSelID!=0) refreshHist(hSelID,false);
+ clearDisplay();
+ window.pmap.document.all("home").style.display="";
+ mObj("data").style.display="";
+ wSelID=0;
+ tSelID=0;
+ mObj("wstart").style.visibility="hidden";
+ mObj("wfwd").style.visibility="hidden";
+ mObj("wback").style.visibility="hidden"
+ }
+}
+
+function pExit(win) {
+if (testReady()==true) {
+ self.close()
+ }
+}
+
+function closeWin() {
+if (srchOn==true) {
+ window.srchWin.srchWOpen=false;
+ window.srchWin.close()
+ }
+}
+
+function selHelp(win) {
+var x,sObj;
+if (testReady()==true) {
+ if (helpOn==true) helpOn=false
+ else helpOn=true;
+ }
+}
+
+function select(win) {
+if (testReady()==true) {
+ sObj=win.event.srcElement.id;
+ if (sObj=="wback") histBack();
+ if (sObj=="wfwd") histFwd();
+ if (sObj=="wstart") goFwd(wStart[wSelID],false)
+ }
+}
+
+function inc(x) {
+x++;
+if (x==20) x=0;
+return x
+}
+
+function dec(x) {
+x--;
+if (x<0) x=19;
+return x
+}
+
+function refreshHCont() {		//refresh history controls
+var bObj,fObj,wObj;
+histGo=false;
+bObj=window.nav.document.all("wback");
+if (hisEnd==hisBegin) bObj.style.visibility="hidden"
+else bObj.style.visibility="visible"
+}
+
+function refreshHist(hSrc,hLnk) {
+fHist[hisEnd]=hSrc;
+fLink[hisEnd]=hLnk;
+fWork[hisEnd]=wSelID;
+fTeam[hisEnd]=tSelID;
+hisEnd=inc(hisEnd);
+if (hisEnd==hisBegin) hisBegin=inc(hisBegin);
+refreshHCont()
+}
+
+
+function histBack() {
+var x;
+hisEnd=dec(hisEnd);
+wSelID=fWork[hisEnd];
+x=fTeam[hisEnd];
+if (tSelID!=x) {
+ tSelID=x;
+ workDiaRef()
+ };
+refreshHCont();
+histGo=true;
+if (fLink[hisEnd]==true) {
+ window.pmap.document.all("detail").innerHTML="";
+ disInLinks(fHist[hisEnd])
+ }
+else {
+ hSelID=fHist[hisEnd];
+ if (hSelID!=0) goFwd(hSelID,false)
+ }
+}
+
+function getInLinks(lnk) {
+var lText,i,x,z;
+lText="";
+for (i=1; i<x; i++) {
+ if (lTo[i]==n_ID) links[z++]=i
+ };
+links=lnk.split(",");
+x=links.length;
+for (i=1; i<x; i++) {
+ z=lFrom[links[i]];
+ lText=lText+"<DIV ID=LI"+z+" class=link>";
+ lText=lText+nName[z]+"</DIV>\n\r"
+ };
+return lText
+}
+
+function getOutLinks(lnk,txt) {
+var lText,i,u,w,x,v,z;
+lText="";
+links=lnk.split(",");
+x=links.length;
+for (i=1; i<x; i++) {
+ v=1;
+ z=tLinks.length;
+ w=links[i];
+ u=slT[nSL[lTo[w]]];
+ if (u!=tSelID) {
+  stop=true;
+  l=tName[u];
+  lText=lText+"<DIV ID=LO"+lTo[w]+" class=farlink>";
+  lText=lText+lName[w]+"  .... to "+l+"</DIV>\n\r";
+  redBox(u)
+  }
+ else {
+  w=links[i];
+  lText=lText+"<DIV ID=LO"+lTo[w]+" class=link>";
+  lText=lText+lName[w]+"</DIV>\n\r"
+  }
+ };
+if (lText!="") return txt+lText;
+else return ""
+}
+
+function redBox(t_ID) {
+var i;
+for (i=1; i<13; i++) {
+ if (nDisp[i]==t_ID) window.pmap.document.all("TT"+i).className="boxex"
+ }
+}
+
+function goFwd(n_ID,cont) {
+var lText,tx,ty,l,i,t,u,v,w,x,y,z,aw,ax,ay,az;
+list=false;
+found=new Boolean(0);
+x=n_ID;
+nSelID=x;
+tOldID=tSelID;
+written=new Array();
+lText="Workflow: "+wName[wSelID];
+if(tSelID!=0) window.pmap.document.all("detailhead").innerText=tName[tSelID];
+disSel();
+stop=new Boolean(0);
+if (cont!=true || start==true) {
+ window.pmap.document.all("detail").innerHTML="";
+ hSelID=x
+ };
+while (stop==false && written[x]!=1) {
+ if (nLogic[x]=="C") {
+  l=nOL[x].split(",");
+  if (l.length==2) {		//fanin "C"
+   comstack[comCo++]=lastDia;
+   x=lTo[l[1]]
+   }
+  else {			//fanout "C"
+   comCo--;
+   t=comstack[comCo];
+   u=l.length;
+   found=false;
+   v=1;
+   while(v<u && (found==false)) {
+    x=lTo[l[v++]];
+    if (t==nDia[x]) found=true;
+    }
+   }
+  };
+ nSelID=x;
+ written[x]=1;
+ tx=nOL[x];
+ ty=tx.split(",");
+ z=ty.length;
+ y=nLogic[x];
+ if (z==2) {
+  aw=slW[nSL[x]];			//get work flows
+  ax=aw.split(",");
+  ay=ax.length;
+  az=1;
+  found=false;
+  while (az<ay && found==false) {
+   if (ax[az++]==wSelID) found=true
+   };
+  if (found==false) {
+   if (histGo==false) {
+    stop=true;
+    lText="<DIV ID=LX"+x+" class=andlink>";
+    lText=lText+"Click to follow the: "+wName[ax[1]]+" workflow?</DIV>\n\r";
+    window.pmap.document.all("detail").insertAdjacentHTML("BeforeEnd",lText)
+    }
+   }
+  };
+ if (stop==false) {
+  if (((y=="X" || y=="O") && z<=2 || y=="C")!=true) l=workDet()
+  else l="I";
+  if (l=="I") {
+   start=false;
+   window.nav.document.all("wstart").style.visibility="visible";
+   if (z!=2) stop=true;
+   if (stop!=true) {
+    w=nIL[x].split(",")
+    if (nLogic[x]=="A" && w.length>2) {	//fan-in and
+     stop=true;
+     lText="<DIV ID=LO"+lTo[ty[1]]+" class=andlink>";
+     lText=lText+"Yes</DIV>\n\r";
+     window.pmap.document.all("detail").insertAdjacentHTML("BeforeEnd",lText)
+     }   
+    else {
+     w=ty[1];
+     u=slT[nSL[lTo[w]]];
+     if (u!=slT[nSL[x]]) {
+      stop=true;
+      l=tName[u];
+      lText="<DIV ID=LO"+lTo[w]+" class=farlink>";
+      lText=lText+lName[w]+"  .... to "+l+"</DIV>\n\r";
+      window.pmap.document.all("detail").insertAdjacentHTML("BeforeEnd",lText);
+      redBox(u)
+      }
+     }
+    };
+   if(nLogic[x]!="C") lastDia=nDia[x];
+   x=lTo[ty[1]]
+   }
+  else stop=true
+  }
+ }
+}
+
+
+function clickE(win) {			//click on link to embedded doc
+emWin=window.open(emHREF[field1],"",embedWin)
+}
+
+function clickL(win) {			//link clicked
+var x,iObj;
+iObj=window.pmap.document.all;
+if (ID2!="S" && ID2!="X") {
+ if (hSelID!=fHist[dec(hisEnd)] || win.event.srcElement.className=="farlink")  refreshHist(hSelID,false)
+ else refreshHist(lnkSrc,true)
+ };
+histGo=false;
+x=field1;
+if (ID2=="S") {
+ wSelID=slW[nSL[x]].split(",")[1];
+ tSelID=slT[nSL[x]];
+ tOldID=tSelID;
+ iObj("selbut").style.visibility="hidden";
+ iObj("bigpanel").style.visibility="hidden";
+ iObj("bigdetail").innerHTML="";
+ iObj("map").style.display="";		//show workflow diagram
+ iObj("home").style.display="none";
+ workDiaRef();
+ window.self.focus()
+ };
+if (ID2=="X") wSelID=slW[nSL[x]].split(",")[1];
+if (x==0) alert("End or start of workflow")
+else {
+ nSelID=x;
+ iObj("detail").innerHTML="";
+ goFwd(x,false)
+ }
+}
+
+function getT(dID) {			//get T contents in data win
+dState[0]="I";
+if (dState[dID]!="I") {			//not already in data
+ loadingT=true;				//set loading flag
+ dState[dID]="L";
+ window.nav.location.href="T"+dID+".htm"
+ };
+return dState[dID]
+}
+
+function clickX(win) {			//index header clicked
+var i,x,l,hObj;
+hObj=window.pmap.document.all;
+if (hObj("XI"+field1).src.indexOf("hide")==-1) {
+ hObj("XI"+field1).src="hide.gif";
+ hObj("XH"+field1).style.display=""
+ }
+else {
+ hObj("XI"+field1).src="show.gif";
+ hObj("XH"+field1).style.display="none"
+ }
+}
+
+
+function refreshTeams(nID) {
+var x,i,y,hObj,hText;
+hObj=window.pmap.document.all("detail");
+hObj.innerHTML="<DIV class=head>Teams</DIV>";		//clear window
+if (nID==0) {
+ x=tName.length;
+ for (i=1; i<x; i++) {
+  getHead(9,"I","S",i)			//create HTML for header
+  }					//next i
+ }
+else {
+ getHead(13,"O","S",nID,"");		//get HTML for header
+ hObj=window.pmap.document.all("XOS"+nID);	//container for expansion
+ hObj.style.display="";		//show it		
+ hText="<DIV CLASS=exphead>Description</DIV>\n\r";
+ hText=hText+window.pmap.document.all("SD"+nID).outerHTML;
+ hText=hText+"<DIV CLASS=exphead>Manager</DIV>\n\r";
+ hText=hText+window.pmap.document.all("SM"+nID).outerHTML;
+ hText=hText+"<DIV CLASS=exphead>Responsibility</DIV>\n\r";
+ hText=hText+window.pmap.document.all("SR"+nID).outerHTML;
+ hText=hText+"<DIV CLASS=exphead>Process Representative</DIV>\n\r";
+ hText=hText+window.pmap.document.all("SP"+nID).outerHTML;
+ hObj.insertAdjacentHTML("BeforeEnd",hText);
+ x=nDia.length;
+ hText="<DIV CLASS=exphead>Functions</DIV>\n\r";
+ hObj.insertAdjacentHTML("BeforeEnd",hText);
+ for (i=1; i<x; i++) {
+  if (nSL[i]==nID && (nLogic[i]=="F" || nLogic[i]=="U")) {
+   getHead(9,"I","N",i)
+   }
+  } 
+ }
+}
+
+//-->
+</script>
+
+<frameset rows="63,*" frameborder="yes" framespacing="0" border="0">
+	<frame src="A_file.htm" name="nav" frameborder="no" border="0" scrolling="no">
+	<frame src="newmap.htm" name="pmap"  frameborder="no" border="0" scrolling="yes">
+</frameset>
+<noframes>
+    <body>
+    <h2>Bitte benutzen Sie einen Frame-fähigen Browser!</h2>
+    </body>
+    </noframes>
+</html>

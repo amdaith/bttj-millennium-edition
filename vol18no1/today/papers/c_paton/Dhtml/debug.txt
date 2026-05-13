@@ -1,0 +1,20 @@
+
+Workflow: Manage service provision
+Inform SPOC, DCF, Order to Field Service, 
+
+Await installation completion, Installation status request, Third Party Installation & Test, 
+
+Third Party Installation & Test, Completion details, Update service details, 
+
+Workflow: Perform installation
+Order to Field Service, Works Instruction, Telco FS Installation & test, 
+
+Telco FS Installation & test, Acceptance form for signature, Sign agreement, 
+
+Agreement signed, Signed acceptance form, Record completion details, 
+
+Record completion details, Completion details, Confirm completion, 
+
+Confirm completion, Completion details, Ready for customer acceptance, 
+
+Workflow: Provide Inbound Services

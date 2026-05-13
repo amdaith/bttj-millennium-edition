@@ -1,0 +1,224 @@
+body			{font-family: Arial;
+			padding: 10;
+			color: #1C69B7;
+			font-size: 9pt
+			}
+
+.head			{font-size: 11pt;
+			font-weight: bold;
+			text-decoration: underline
+			}
+
+.subhead		{font-size: 10pt;
+			padding-top: 10;
+			text-decoration: underline
+			}
+
+.exphead		{ font-family: Arial;
+			font-size: 10pt;			
+			font-weight: bold;
+			text-decoration: none;
+			position:relative;
+			cursor:hand}
+
+.nonexphead		{ font-family: Arial;
+			font-size: 10pt;			
+			position: relative;
+			font-weight: bold
+			}
+
+.link			{text-decoration: underline;
+			cursor:hand
+			}
+
+.farlink		{text-decoration: underline;
+			font-style: italic;
+			cursor: hand;
+			color: red
+			}
+
+.andlink		{text-decoration: underline;
+			font-style: italic;
+			cursor: hand;
+			color: green
+			}
+
+.blank			{visibility: hidden;
+			position: absolute;
+			cursor: normal;
+			width:90;
+ 			height:60
+			}
+
+.boxsel			{visibility: visible;
+			text-align: center;
+			color: #1C69B7;
+			cursor: wait;
+			border-style: inset;
+			border-color: #FFCC00;
+			background-color: #FFCC00;
+			position: absolute;
+			overflow: clip;
+			width:90;
+ 			height:60
+			}
+
+.box			{visibility: visible;
+			text-align: center;
+			color: #FFCC00;
+			border-style: outset;
+			border-color: #1C69B7;
+			cursor: hand;
+			background-color: #1C69B7;
+			position: absolute;
+			overflow: clip;
+			width:90;
+ 			height:60
+			}
+
+.menu			{visibility: visible;
+			color: #000000;
+			border-style: outset;
+			border-color: #C0C0C0;
+			cursor: hand;
+			background-color: #C0C0C0;
+			position: absolute;
+			overflow: clip;
+			width:200
+			}
+
+.boxex			{visibility: visible;
+			text-align: center;
+			color: red;
+			border-style: outset;
+			border-color: red;
+			cursor: hand;
+			background-color: #FFFFFF;
+			position: absolute;
+			overflow: clip;
+			width:90;
+ 			height:60
+			}
+
+.select			{font-family: Arial;
+			font-size: 7pt;
+			color: #000000
+			}
+
+.form			{color: #FFCC00;
+			border-style: outset;
+			border-color: #1C69B7;
+			background-color: #1C69B7
+			}
+
+
+.ICOMsel		{visibility: visible;
+			filter:invert(enabled=1) chroma(color=#000000,enabled=1);
+			cursor:hand;
+			position:absolute
+			}
+
+.ICOM			{visibility: visible;
+			filter:invert(enabled=0) chroma(color=#FFFFFF,enabled=1);
+			cursor:hand;
+			position:absolute
+			}
+
+.x			{visibility: visible;
+			background-color=transparent;
+			cursor:hand;
+			position:absolute;
+			width:20;
+			height:30
+			}
+
+.xsel			{visibility: visible;
+			background-color=red;
+			cursor:hand;
+			position:absolute;
+			width:20;
+			height:30
+			}
+
+.panel			{font-family: Arial;
+			color: #1C69B7;
+			font-size: 9pt;
+			text-align:left;
+			border-style: inset;
+			border-color: #FFCC00;
+			background-color: #FFCC00;
+			position: absolute;
+			left:180;
+			top:140;
+			width: 360;
+			height: 200
+			}
+
+.detail			{font-family: Arial;
+			padding: 10;
+			color: #1C69B7;
+			font-size: 9pt;
+			text-align:left;
+			overflow:scroll;
+			border-style: none;
+			background-color: #FFCC00;
+			left:0;
+			top:0;
+			width: 350;
+			height: 160
+			}
+
+.dhead			{font-family: Arial;
+			padding: 5;
+			color: #1C69B7;
+			font-weight: bold;
+			font-size: 12pt;
+			text-align:left;
+			border-style: none;
+			background-color: #FFCC00;
+			left:0;
+			top:0;
+			width: 310;
+			height: 30
+			}
+.bigpanel		{font-family: Arial;
+			color: #1C69B7;
+			font-size: 9pt;
+			text-align:left;
+			border-style: inset;
+			border-color: "gray";
+			background-color: #FFFFFF;
+			position: absolute;
+			left:50;
+			top:60;
+			width: 650;
+			height: 350
+			}
+
+.bigdetail		{font-family: Arial;
+			padding: 10;
+			color: #1C69B7;
+			font-size: 9pt;
+			text-align:left;
+			overflow:scroll;
+			border-style: none;
+			background-color: #FFFFFF;
+			left:0;
+			top:0;
+			width: 640;
+			height: 340
+			}
+
+.bighead		{font-family: Arial;
+			padding: 5;
+			color: #1C69B7;
+			font-weight: bold;
+			font-size: 12pt;
+			text-align:left;
+			border-style: none;
+			background-color: #FFFFFF;
+			left:0;
+			top:0;
+			width: 600;
+			height: 30
+			}
