@@ -69,5 +69,15 @@
 </table>
 <a href="javascript:close()";><img src="../../../graphics/pop_up/close.gif" width="129" height="33" border="0"></a> 
 
+<script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
+<script>
+window.RufflePlayer = window.RufflePlayer || {};
+window.RufflePlayer.config = {
+    ...window.RufflePlayer.config,
+    "polyfills": true,
+    "autoplay": "on",
+    "splashScreen": false,
+};
+</script>
 </body>
 </html>
