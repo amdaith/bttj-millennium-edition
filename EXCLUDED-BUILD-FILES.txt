@@ -1,5 +1,0 @@
-.build.yml
-.git
-.gitignore
-EXCLUDED-BUILD-FILES.txt
-README.md
