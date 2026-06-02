@@ -2,7 +2,6 @@ function enableDeeplinking() {
   // change frame to pathname in URL hash if specified
   urlHash = window.location.hash.substring(1);
   if (urlHash && urlHash != window.frames[2].location.pathname) {
-    console.log('Navigating to URL hash:', urlHash);
     window.frames[2].location.replace(urlHash);
   }
 
@@ -24,15 +23,9 @@ function enableDeeplinking() {
 
 // listen for changes to URL hash and navigate frame to new pathname
 window.addEventListener('hashchange', (event) => {
-  console.log(`The URL hash changed!`);
-  console.log('Old URL:', event.oldURL);
-  console.log('New URL:', event.newURL);
-
   urlHash = window.location.hash.substring(1);
-  console.log('New hash:', urlHash);
   if (urlHash) {
     if (urlHash != window.frames[2].location.pathname) {
-      console.log('hashchange nav:', urlHash);
       window.frames[2].location.replace(urlHash);
     }
   } else {
