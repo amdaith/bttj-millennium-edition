@@ -1,0 +1,18 @@
+image: alpine/edge
+secrets:
+  - 353c736b-4578-44a7-8152-d15225996d33
+triggers:
+  action: email
+  condition: failure
+  to: srhtbuilds@k6.tel
+environment:
+  repo: bttj-millennium-edition
+sources:
+  - git+ssh://git@git.sr.ht/~amdaith/$repo
+tasks:
+  - mirror-to-github: |
+      cd ~/$repo
+      ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
+      git remote add github git@github.com:amdaith/$repo.git
+      git push --mirror github
+
