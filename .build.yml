@@ -1,8 +1,8 @@
 image: alpine/edge
 triggers:
   - action: email
-  - condition: failure
-  - to: srhtbuilds@k6.tel
+    condition: failure
+    to: srhtbuilds@k6.tel
 environment:
   repo: bttj-millennium-edition
 secrets:
