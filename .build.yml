@@ -4,7 +4,7 @@ triggers:
   - condition: failure
   - to: srhtbuilds@k6.tel
 environment:
-  - repo: bttj-millennium-edition
+  repo: bttj-millennium-edition
 secrets:
   - 353c736b-4578-44a7-8152-d15225996d33
 sources:
