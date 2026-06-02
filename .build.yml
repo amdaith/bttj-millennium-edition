@@ -9,9 +9,6 @@ packages:
 environment:
   site: millennium.k6.tel
 tasks:
-- make: |
-    cd bttj-millennium-edition
-    make deploy
 - package: |
     cd bttj-millennium-edition
     tar -cvz -X EXCLUDED-BUILD-FILES.txt . > ~/site.tar.gz
