@@ -12,5 +12,6 @@ tasks:
       cd ~/$repo
       ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
       git remote add github git@github.com:amdaith/$repo.git
-      git push --mirror github
+      git push github main
+      git push github original-files
 
