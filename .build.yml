@@ -1,22 +1,18 @@
-environment:
-  BUILD_SUBMITTER: git.sr.ht
-  GIT_REF: refs/heads/main
-  repo: bttj-millennium-edition
 image: alpine/edge
-secrets:
-- 353c736b-4578-44a7-8152-d15225996d33
-sources:
-- "https://git.sr.ht/~amdaith/bttj-millennium-edition#83e3c3463d4ebd9c35280b5d3a5bd1d3d16ffebb"
-tasks:
-- mirror_to_github: |
-    cd ~/$repo
-    ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
-    git remote add github git@github.com:amdaith/$repo.git
-    git push --force github main
-    git switch original-files
-    git push github original-files
 triggers:
-- action: email
-  condition: failure
-  to: srhtbuilds@k6.tel
+  - action: email
+    condition: failure
+    to: srhtbuilds@k6.tel
+environment:
+  repo: bttj-millennium-edition
+secrets:
+  - 353c736b-4578-44a7-8152-d15225996d33
+tasks:
+  - mirror_to_github: |
+      cd ~/$repo
+      ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
+      git remote add github git@github.com:amdaith/$repo.git
+      git push github main
+      git switch original-files
+      git push github original-files
 
