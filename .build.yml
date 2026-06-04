@@ -13,4 +13,6 @@ tasks:
       ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
       git remote add github git@github.com:amdaith/$repo.git
       git push --force github main
+      git switch original-files
+      git push github original-files
 
