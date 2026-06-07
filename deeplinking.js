@@ -22,8 +22,12 @@ to figure out... event listeners are pretty cool though!
 function enableDeeplinking() {
   aElements = window.frames[2].document.getElementsByTagName("a");
   for (i = 0; i < aElements.length ; i++) {
-    // add hash and target to links unless they already have either
-    if (!aElements[i].hash && !aElements[i].getAttribute("target")) {
+    // add hash and target to links as lone as they don't have both already
+    if (!aElements[i].hash
+        && !aElements[i].getAttribute("target")
+        // also don't apply to mailto links (no hostname) or external links
+        && (aElements[i].hostname && aElements[i].hostname == window.location.hostname)
+      ) {
       aElements[i].href = window.location.pathname + "#" + aElements[i].pathname;
       aElements[i].setAttribute("target", "_top");
     } else if (aElements[i].hash && aElements[i].pathname != window.frames[2].location.pathname) {
