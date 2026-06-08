@@ -1,20 +1,20 @@
 // Copyright 2026 Amdaith
 
 /*
-yes, my JS probably sucks but I'm not a frontend dev!
+Yes, my JS probably sucks but I'm not a frontend dev!
 
-also: I am so glad that I am not a frontend dev, this took me forever
-to figure out... event listeners are pretty cool though!
+Also: I am so glad that I am not a frontend dev, this took me forever
+to figure out... Event listeners are pretty cool though!
 */
 
 /*
-  amend all links to add hash with pathname and set target to whole window
+  Amend all links to add hash with pathname and set target to whole window
 
-    this has to be a function called by frame onload as otherwise it gets
+    This has to be a function called by frame onload as otherwise it gets
     run before the target frame has loaded :-(
-    also this is because I can't figure out a way to run all of this JS stuff
+    Also this is because I can't figure out a way to run all of this JS stuff
     after the frames have loaded because framesets are used instead of the
-    body tag apparently! and yes, I could replace frameset with iframes but
+    body tag apparently! And yes, I could replace frameset with iframes but
     I am trying to avoid making too many changes to the original code and
     handle as much as possible by just using JS to make modifications on
     top of it!
@@ -22,7 +22,7 @@ to figure out... event listeners are pretty cool though!
 function enableDeeplinking() {
   aElements = window.frames[2].document.getElementsByTagName("a");
   for (i = 0; i < aElements.length ; i++) {
-    // add hash and target to links as lone as they don't have both already
+    // add hash and target to links as long as they don't have both already
     if (!aElements[i].hash
         && !aElements[i].getAttribute("target")
         // also don't apply to mailto links (no hostname) or external links
@@ -40,7 +40,9 @@ function enableDeeplinking() {
 };
 
 /*
-  change frame to pathname in URL hash if specified
+  Navigate content frame to pathname in URL hash if specified
+
+    I've used DOMContentLoaded here because it gets fired earlier than load!
 */
 document.addEventListener("DOMContentLoaded", (event) => {
   urlHash = window.location.hash.substring(1);
@@ -50,7 +52,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 });
 
 /*
-  listen for changes to URL hash and navigate frame to new pathname
+  Listen for changes to URL hash and navigate content frame to new pathname
 */
 window.addEventListener('hashchange', (event) => {
   urlHash = window.location.hash.substring(1);
